@@ -440,8 +440,8 @@ body {
 
 .crystal {
     position: absolute;
-    width: 30px;
-    height: 50px;
+    width: 60px;
+    height: 100px;
     top: 50%;
     left: 50%;
     clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
@@ -451,28 +451,28 @@ body {
 
 .crystal-green {
     background: linear-gradient(135deg, #00ff99, #00cc88);
-    transform: translate(calc(-50% - 120px), -50%);
+    transform: translate(calc(-50% - 240px), -50%);
     filter: drop-shadow(0 0 15px rgba(0, 255, 153, 0.6));
     animation-delay: 0s;
 }
 
 .crystal-violet {
     background: linear-gradient(135deg, #cc00ff, #9900ff);
-    transform: translate(-50%, calc(-50% + 130px));
+    transform: translate(-50%, calc(-50% + 260px));
     filter: drop-shadow(0 0 15px rgba(204, 0, 255, 0.6));
     animation-delay: 0s;
 }
 
 .crystal-red {
     background: linear-gradient(135deg, #ff3333, #cc0000);
-    transform: translate(-50%, calc(-50% - 130px));
+    transform: translate(-50%, calc(-50% - 260px));
     filter: drop-shadow(0 0 15px rgba(255, 51, 51, 0.6));
     animation-delay: 0s;
 }
 
 .crystal-yellow {
     background: linear-gradient(135deg, #ffff00, #ffcc00);
-    transform: translate(calc(-50% + 120px), -50%);
+    transform: translate(calc(-50% + 230px), -50%);
     filter: drop-shadow(0 0 15px rgba(255, 255, 0, 0.6));
     animation-delay: 0s;
 }
@@ -487,26 +487,26 @@ body {
 }
 
 .crystal-green {
-   --tx: calc(-50% - 120px);
+   --tx: calc(-50% - 240px);
    --ty: -50%;
     animation: floatVertical 3s ease-in-out infinite 0s;
 }
 
 .crystal-violet {
     --tx: -50%;
-    --ty: calc(-50% + 130px);
+    --ty: calc(-50% + 260px);
     
     animation: floatVertical 3s ease-in-out infinite 0s;
 }
 
 .crystal-red {
     --tx: -50%;
-    --ty: calc(-50% - 130px);
+    --ty: calc(-50% - 260px);
     animation: floatVertical 3s ease-in-out infinite 0s;
 }
 
 .crystal-yellow {
-    --tx: calc(-50% + 120px);
+    --tx: calc(-50% + 240px);
     --ty: -50%;
     animation: floatVertical 3s ease-in-out infinite 0s;
 }
