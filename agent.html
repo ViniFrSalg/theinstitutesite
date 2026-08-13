@@ -28,16 +28,154 @@
                 </div>
             </div>
             <div class="agent-actions">
-                <a href="admin.html" class="btn btn-primary">MAGIC DATA CENTER</a>
                 <a href="login.html" class="btn btn-secondary" id="logoutLink">LOG OUT</a>
             </div>
         </section>
+
+        <section class="data-browser agent-magic-browser" aria-label="Read-only magic archive">
+            <div class="browser-heading">
+                <span class="badge">Read Only</span>
+                <h2>Kloerland Magic Archive</h2>
+            </div>
+            <div class="browser-tools">
+                <div class="form-group">
+                    <label for="agentSearchInput">Search</label>
+                    <input id="agentSearchInput" type="search" placeholder="Find name, test, effect">
+                </div>
+                <div class="form-group">
+                    <label for="agentTypeFilter">Filter</label>
+                    <select id="agentTypeFilter">
+                        <option value="All">All Types</option>
+                        <option value="Spell">Spells</option>
+                        <option value="Weapon">Weapons</option>
+                        <option value="Item">Items</option>
+                        <option value="Equipment">Equipment</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="agentElementFilter">Element</label>
+                    <select id="agentElementFilter">
+                        <option value="All">All Elements</option>
+                        <option value="Vida / Life">Green - Vida / Life</option>
+                        <option value="Força / Strength">Red - Força / Strength</option>
+                        <option value="Matéria / Matter">Yellow - Matéria / Matter</option>
+                        <option value="Entropia / Entropy">Violet - Entropia / Entropy</option>
+                        <option value="Fifth Element">Blue - Fifth Element</option>
+                        <option value="???">Orange - ???</option>
+                    </select>
+                </div>
+            </div>
+            <div class="records-list" id="agentRecordsList"></div>
+        </section>
     </main>
     <script>
+        const AGENT_AUTH_KEY = 'instituteAgentAuth';
+
+        function getStoredFlag(key) {
+            const cookieMatch = document.cookie
+                .split('; ')
+                .find((cookie) => cookie.startsWith(`${key}=`));
+
+            try {
+                if (localStorage.getItem(key) === 'true') return true;
+            } catch (error) {}
+
+            try {
+                if (sessionStorage.getItem(key) === 'true') return true;
+            } catch (error) {}
+
+            return cookieMatch ? cookieMatch.split('=')[1] === 'true' : false;
+        }
+
+        if (!getStoredFlag(AGENT_AUTH_KEY)) {
+            window.location.replace('login.html');
+        }
+
+        let magicRecords = [];
+        const searchInput = document.getElementById('agentSearchInput');
+        const typeFilter = document.getElementById('agentTypeFilter');
+        const elementFilter = document.getElementById('agentElementFilter');
+        const recordsList = document.getElementById('agentRecordsList');
+
         document.getElementById('logoutLink').addEventListener('click', function () {
             localStorage.removeItem('instituteAgentAuth');
             localStorage.removeItem('instituteAdminAuth');
         });
+
+        function escapeHtml(value) {
+            return String(value)
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#039;');
+        }
+
+        function getElementClass(element) {
+            const elementMap = {
+                'Vida / Life': 'element-life',
+                'Força / Strength': 'element-strength',
+                'Matéria / Matter': 'element-matter',
+                'Entropia / Entropy': 'element-entropy',
+                'Fifth Element': 'element-fifth',
+                '???': 'element-unknown'
+            };
+
+            return elementMap[element] || 'element-none';
+        }
+
+        function renderMagicRecords() {
+            const search = searchInput.value.trim().toLowerCase();
+            const selectedType = typeFilter.value;
+            const selectedElement = elementFilter.value;
+            const filtered = magicRecords.filter((record) => {
+                const matchesType = selectedType === 'All' || record.type === selectedType;
+                const matchesElement = selectedElement === 'All' || record.element === selectedElement;
+                const content = Object.values(record).join(' ').toLowerCase();
+                return matchesType && matchesElement && content.includes(search);
+            });
+
+            recordsList.innerHTML = filtered.map((record) => `
+                <article class="record-row read-only-record">
+                    <div class="record-main">
+                        <div class="record-tags">
+                            <span class="record-type">${record.type}</span>
+                            ${record.type === 'Spell' ? `<span class="element-tag ${getElementClass(record.element)}">${escapeHtml(record.element || 'Unclassified')}</span>` : ''}
+                        </div>
+                        <h3>${escapeHtml(record.name)}</h3>
+                        <p>${escapeHtml(record.effect || 'No special effect recorded.')}</p>
+                    </div>
+                    <dl class="record-stats">
+                        <div><dt>Rarity</dt><dd>${escapeHtml(record.rarity || '-')}</dd></div>
+                        <div><dt>Element</dt><dd>${escapeHtml(record.type === 'Spell' ? record.element || '-' : '-')}</dd></div>
+                        <div><dt>Range</dt><dd>${escapeHtml(record.range || '-')}</dd></div>
+                        <div><dt>Duration</dt><dd>${escapeHtml(record.duration || '-')}</dd></div>
+                        <div><dt>Test</dt><dd>${escapeHtml(record.test || '-')}</dd></div>
+                        <div><dt>Damage</dt><dd>${escapeHtml(record.damage || '-')}</dd></div>
+                        <div><dt>Critical</dt><dd>${escapeHtml(record.critical || '-')}</dd></div>
+                    </dl>
+                </article>
+            `).join('');
+        }
+
+        async function loadMagicRecords() {
+            try {
+                const response = await fetch('magic-data.json', { cache: 'no-store' });
+                if (!response.ok) {
+                    throw new Error(`Unable to load magic-data.json: ${response.status}`);
+                }
+
+                magicRecords = await response.json();
+                renderMagicRecords();
+            } catch (error) {
+                recordsList.innerHTML = '<article class="record-row"><div class="record-main"><h3>Magic archive unavailable</h3><p>The shared JSON file could not be loaded. Use a local server or deploy the site to read magic-data.json.</p></div></article>';
+            }
+        }
+
+        searchInput.addEventListener('input', renderMagicRecords);
+        typeFilter.addEventListener('change', renderMagicRecords);
+        elementFilter.addEventListener('change', renderMagicRecords);
+        loadMagicRecords();
     </script>
 </body>
 </html>

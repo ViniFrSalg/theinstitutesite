@@ -27,3 +27,11 @@ This website serves as an **in-game web interface** for The Institute within an 
 This is a **test/learning project** made by a newbie HTML/CSS developer. It's a work in progress, and feedback is always welcome! 
 
 ---
+
+## Magic Archive Data Flow
+
+`magic-data.json` is the canonical read-only dataset used by both `admin.html` and `agent.html`.
+
+The admin page keeps its working edits in browser `localStorage` and can export the edited dataset as a JSON file. Because this project is currently a static website, a browser cannot directly overwrite the deployed `magic-data.json`. To publish admin changes for all agents, export the JSON and replace the site's `magic-data.json` with that file.
+
+Agents only read `magic-data.json` and have no edit/delete controls. The agent dashboard also requires the normal agent login flag before displaying the archive.

@@ -76,7 +76,7 @@
                             <option value="Força / Strength">Red - Força / Strength</option>
                             <option value="Matéria / Matter">Yellow - Matéria / Matter</option>
                             <option value="Entropia / Entropy">Violet - Entropia / Entropy</option>
-                            <option value="Quinto Elemento / Fifth Element">Blue - Fifth Element</option>
+                            <option value="Fifth Element">Blue - Fifth Element</option>
                             <option value="???">Orange - ???</option>
                         </select>
                     </div>
@@ -194,67 +194,21 @@
             window.history.replaceState({}, document.title, window.location.pathname);
         }
 
-        const seedRecords = [
-            { id: 'spell-okheal', type: 'Spell', name: 'Okheal', rarity: '', element: 'Vida / Life', range: '2', duration: 'Instantânea', test: 'Intelectualidade + Cura', damage: '2d4', critical: '2d6+1', effect: 'Cura.' },
-            { id: 'spell-corte-botanico', type: 'Spell', name: 'Corte Botânico', rarity: '', element: 'Vida / Life', range: '4', duration: 'Instantânea', test: 'Agilidade + Escopo', damage: '2d4+1', critical: '2d6+3', effect: '' },
-            { id: 'spell-corrente-vinhas', type: 'Spell', name: 'Corrente de Vinhas', rarity: '', element: 'Vida / Life', range: '4', duration: '2 turnos', test: 'Intelectualidade + Visão ou Intelectualidade + Escopo', damage: '-1', critical: '-3', effect: 'Diminui qualquer teste de Agilidade e Potência do oponente.' },
-            { id: 'spell-escudo-floral', type: 'Spell', name: 'Escudo Floral', rarity: '', element: 'Vida / Life', range: '2', duration: '1 turno', test: 'Resistência + Inteligência ou Intelectualidade + Leitura', damage: '2', critical: '3', effect: 'Aumenta DEF de usuário ou aliado.' },
-            { id: 'spell-rude-buster', type: 'Spell', name: 'Rude Buster', rarity: '', element: 'Força / Strength', range: '2', duration: 'Instantânea', test: 'Potência + Escopo', damage: '2d8+1', critical: '2d10+4', effect: 'Cooldown de 1 turno.' },
-            { id: 'spell-chuva-pirotecnica', type: 'Spell', name: 'Chuva pirotécnica', rarity: '', element: 'Força / Strength', range: '3 e 3x3', duration: 'Instantânea', test: 'Potência + Inteligência ou Intelectualidade + Escopo', damage: '2d4', critical: '2d6', effect: 'Dano em área.' },
-            { id: 'spell-vontade-efervescente', type: 'Spell', name: 'Vontade efervescente', rarity: '', element: 'Força / Strength', range: '0', duration: '2 turnos', test: 'Intelectualidade + Luta', damage: '2', critical: '2', effect: 'Aumenta teste de Potência.' },
-            { id: 'spell-salvaguarda-material', type: 'Spell', name: 'Salvaguarda Material', rarity: '', element: 'Matéria / Matter', range: '1', duration: '1 turno', test: 'Intelectualidade + Atletismo ou Resistência + Inteligência', damage: '1', critical: '3', effect: 'Aumenta DEF de usuário e aliado.' },
-            { id: 'spell-diamante', type: 'Spell', name: 'Pó de Diamante', rarity: '', element: 'Matéria / Matter', range: '4', duration: 'Instantânea', test: 'Intelectualidade + Escopo', damage: '3d4', critical: '4d4+2', effect: 'Dano aumenta em +1 caso esteja gelado. Em crítico, inimigo recebe -3 em testes de agilidade por 1 turno.' },
-            { id: 'spell-cristalizacao-sublime', type: 'Spell', name: 'Cristalização Sublime', rarity: '', element: 'Matéria / Matter', range: '1', duration: 'Instantânea', test: 'Intelectualidade + Engenharia ou Potência + Inteligência', damage: '0', critical: '0', effect: 'Permite a criação e manipulação sofisticada de pequenas estruturas sólidas.' },
-            { id: 'spell-definicao-tempo', type: 'Spell', name: 'Definição do tempo', rarity: '', element: 'Matéria / Matter', range: '∞', duration: '2 turnos', test: 'Intelectualidade + Inteligência', damage: '0', critical: '0', effect: 'O tempo pode ser levemente alterado pelo poder da Matéria, podendo causar precipitações e leves variações de temperatura.' },
-            { id: 'spell-deteccao-decaimento', type: 'Spell', name: 'Detecção de Decaimento', rarity: '', element: 'Entropia / Entropy', range: '5x5', duration: '3 turnos', test: 'Intelectualidade + Leitura ou Intelectualidade + Visão', damage: '0', critical: '0', effect: 'Permite ler o campo de batalha, detectando presenças básicas e mágicas ao alcance. A efetividade depende do resultado da rolagem.' },
-            { id: 'spell-aura-desordenada', type: 'Spell', name: 'Aura Desordenada', rarity: '', element: 'Entropia / Entropy', range: '4', duration: '2 turnos', test: 'Intelectualidade + Sagacidade ou Carisma + Inteligência', damage: '-2', critical: '-3', effect: 'Diminui qualquer teste do oponente em Intelectualidade ou qualquer outro teste mental.' },
-            { id: 'spell-show-luzes', type: 'Spell', name: 'Show de Luzes', rarity: '', element: 'Entropia / Entropy', range: '5', duration: 'Instantânea', test: 'Intelectualidade + Escopo ou Potência + Inteligência', damage: '4d6', critical: '4d6+2d4', effect: 'Player leva 1d4 de dano. Caso acerte, alvo perde 2 turnos e fica com -1 DEF. Caso erre, alvo perde 3 turnos.' },
-            { id: 'spell-descarga-raios-catodicos', type: 'Spell', name: 'Descarga de Raios Catódicos', rarity: '', element: 'Entropia / Entropy', range: '4', duration: 'Instantânea', test: 'Intelectualidade + Escopo ou Potência + Escopo', damage: '2d6', critical: '2d6+1d4', effect: 'Em dano crítico, alvo faz teste de sanidade ou forma dificuldade 14. Se falhar, perde um turno paralisado.' },
-            { id: 'spell-green-buster', type: 'Spell', name: 'Green Buster', rarity: '', element: 'Vida / Life', range: '5', duration: 'Instantânea', test: 'Potência + Escopo', damage: '3d6', critical: '3d6+2', effect: '' },
-            { id: 'spell-vine-destroyer', type: 'Spell', name: 'Vine Destroyer', rarity: '', element: 'Vida / Life', range: '7x7', duration: 'Instantânea', test: 'Agilidade + Luta ou Intelectualidade + Escopo', damage: '2d6', critical: '2d6+3', effect: '' },
-            { id: 'spell-betterheal', type: 'Spell', name: 'BetterHeal', rarity: '', element: 'Vida / Life', range: '2', duration: 'Instantânea', test: 'Intelectualidade + Cura', damage: '2d6+1', critical: '2d8+2', effect: 'Cura.' },
-            { id: 'spell-corrente-espinhosa', type: 'Spell', name: 'Corrente Espinhosa', rarity: '', element: 'Vida / Life', range: '5', duration: '2 turnos', test: 'Intelectualidade + Visão ou Intelectualidade + Escopo', damage: '-1, 1d6', critical: '-3, 1d6', effect: 'Diminui qualquer teste de Agilidade e Potência do oponente; dano no início do turno do oponente.' },
-            { id: 'spell-ruder-buster', type: 'Spell', name: 'Ruder Buster', rarity: '', element: 'Força / Strength', range: '2', duration: 'Instantânea', test: 'Potência + Escopo; Resistência + Luta dificuldade 14 para não tomar 1d4', damage: '2d10+1', critical: '2d10+2+1d8', effect: 'Cooldown de 1 turno.' },
-            { id: 'spell-lamina-flamejante', type: 'Spell', name: 'Lâmina Flamejante', rarity: '', element: 'Força / Strength', range: '3', duration: 'Instantânea / 2 turnos', test: 'Potência + Atletismo ou Agilidade + Luta', damage: '2d4+1 / 1d4', critical: '2d4+1 / 1d4', effect: 'Oponente faz teste de Resistência + Luta para não ser queimado, com dificuldade sendo a defesa do inimigo.' },
-            { id: 'spell-parrying-buster', type: 'Spell', name: 'Parrying Buster', rarity: '', element: 'Força / Strength', range: '2', duration: '1 turno', test: 'Potência + Atletismo ou Agilidade + Luta', damage: '2', critical: '2', effect: 'Permite contrarrolar por amigos na range.' },
-            { id: 'spell-colorful-rain', type: 'Spell', name: 'Colorful Rain', rarity: '', element: 'Matéria / Matter', range: '5 e 7x7', duration: 'Instantâneo', test: 'Intelectualidade + Leitura ou Potência + Inteligência', damage: '1d8', critical: '1d6+1d4', effect: '' },
-            { id: 'spell-fusao-frio', type: 'Spell', name: 'Fusão à frio', rarity: '', element: 'Matéria / Matter', range: '1', duration: '2 turnos', test: 'Intelectualidade + Atletismo ou Resistência + Inteligência', damage: '2', critical: '4', effect: 'Aumenta sua DEF e de aliado em 2.' },
-            { id: 'spell-starfall', type: 'Spell', name: 'StarFall', rarity: '', element: 'Entropia / Entropy', range: '5 e 5x5', duration: 'Instantâneo', test: 'Agilidade + Inteligência ou Intelectualidade + Escopo', damage: '1d10', critical: '2d6', effect: '' },
-            { id: 'spell-trovao-catodico', type: 'Spell', name: 'Trovão Catódico Senoidal', rarity: '', element: 'Entropia / Entropy', range: '5', duration: 'Instantâneo', test: 'Intelectualidade + Escopo ou Potência + Escopo', damage: '2d8', critical: '2d8+1d4', effect: 'Em dano crítico, alvo faz teste de sanidade ou forma dificuldade 14. Se falhar, perde um turno paralisado.' },
+        let seedRecords = [];
 
-            { id: 'weapon-chicote-neuronico', type: 'Weapon', name: 'Chicote Neurônico', rarity: 'Comum', range: '3', duration: '', test: '', damage: '1d6', critical: '2d4+1', effect: 'Em dano crítico, alvo faz teste de sanidade ou forma dificuldade 14. Se falhar, perde um turno paralisado.' },
-            { id: 'weapon-potencializador-alfa', type: 'Weapon', name: 'Potencializador Alfa', rarity: 'Comum', range: '0', duration: '', test: '', damage: '0', critical: '0', effect: 'Dá +2 de dano para qualquer magia ofensiva conjurada; +4 caso crítico.' },
-            { id: 'weapon-cajado-sagrado', type: 'Weapon', name: 'Cajado Sagrado', rarity: 'Comum', range: '2', duration: '', test: '', damage: '1d4', critical: '2d4', effect: 'Em acerto crítico, pode curar 3 HP de um aliado.' },
-            { id: 'weapon-terco-cristalino', type: 'Weapon', name: 'Terço Cristalino', rarity: 'Comum', range: '0', duration: '', test: '', damage: '0', critical: '0', effect: 'Dá +2 para magias de vida; +4 em acertos críticos.' },
-            { id: 'weapon-sabre-neuronico', type: 'Weapon', name: 'Sabre Neurônico', rarity: 'Incomum', range: '2', duration: '', test: '', damage: '2d4 (2d6)', critical: '2d4+3 (2d6+4)', effect: 'Em dano crítico, alvo faz teste de sanidade ou forma dificuldade 14. Se falhar, perde um turno paralisado.' },
-            { id: 'weapon-ultra-desintegrador-laser-v2', type: 'Weapon', name: 'ULTRA DESINTEGRADOR À LASER VERSÃO 2', rarity: 'Comum', range: '5', duration: '', test: '', damage: '1d6', critical: '2d6', effect: '' },
-            { id: 'weapon-wf51-mata-pombo', type: 'Weapon', name: 'WF-51 - Mata-pombo', rarity: 'Comum', range: '7', duration: '', test: '', damage: '1d8', critical: '1d8+1d4', effect: '' },
-            { id: 'weapon-qb75', type: 'Weapon', name: 'QB-75 - Desintegrador Tático', rarity: 'Incomum', range: '3', duration: '', test: '', damage: '2d6', critical: '2d6+3', effect: 'Ricochete: ao conseguir acerto crítico, você leva 2 de dano ao atirar.' },
-            { id: 'weapon-martelo-pequeno', type: 'Weapon', name: 'Martelo Pequeno', rarity: 'Comum', range: '2', duration: '', test: '', damage: '1d4', critical: '2d4', effect: '' },
-            { id: 'weapon-pequeno-escudo-lei', type: 'Weapon', name: 'Pequeno Escudo da Lei', rarity: 'Comum', range: '2', duration: '', test: '', damage: '0', critical: '0', effect: 'Permite ao Jurista adicionar +1 DEF a aliado próximo ou a si mesmo. Pode dar +2 DEF a aliado à custo de seu turno. Efeito temporário até o próximo turno do Jurista.' },
-            { id: 'weapon-bastao-eletrico', type: 'Weapon', name: 'Bastão elétrico', rarity: 'Comum', range: '2', duration: '', test: '', damage: '1d8', critical: '2d4+2', effect: '' },
-            { id: 'weapon-espada-grama', type: 'Weapon', name: 'Espada de grama', rarity: 'Incomum', range: '3', duration: '', test: '', damage: '2d4 (2d6+1)', critical: '3d4 (6)', effect: 'Caso consiga crítico, oponente é envolvido em vinhas e tem -2 em testes de Agilidade por um turno.' },
-            { id: 'weapon-wf52-mata-pombos', type: 'Weapon', name: 'WF-52 - Mata-pombos', rarity: 'Incomum', range: '7', duration: '', test: '', damage: '1d10', critical: '1d10+1d4', effect: '' },
-            { id: 'weapon-revoada', type: 'Weapon', name: 'REVOADA', rarity: 'Customizado', range: '5', duration: '', test: '', damage: '1d8+1 / 2*1d6+1 / 1d8+3', critical: '1d8+5 / 1d4+4,1d6+1 / 1d8+8', effect: 'Entropia / Entropy: alvo faz contrateste; se falhar fica com -2.' },
-            { id: 'weapon-sabre-luz', type: 'Weapon', name: 'Sabre de Luz', rarity: 'Customizado', range: '2 / 5', duration: '', test: '', damage: '2d6 / 1d8', critical: '2d6+3 / 1d8+4', effect: 'Paralisado em caso crítico.' },
-            { id: 'weapon-sabre-cavaleira', type: 'Weapon', name: 'Sabre da Cavaleira', rarity: 'Raro', range: '3', duration: '', test: '', damage: '2d8+2', critical: '2d8+4', effect: '' },
+        async function loadSeedRecords() {
+            const response = await fetch('magic-data.json', { cache: 'no-store' });
+            if (!response.ok) {
+                throw new Error(`Unable to load magic-data.json: ${response.status}`);
+            }
 
-            { id: 'item-frasco-pilula', type: 'Item', name: 'Frasco/Pílula', rarity: 'Comum', range: '', duration: '', test: '', damage: '', critical: '', effect: 'Cura 10 HP.' },
-            { id: 'item-sanduiche', type: 'Item', name: 'Sanduíche', rarity: 'Comum', range: '', duration: '', test: '', damage: '', critical: '', effect: 'Cura 4 HP.' },
-            { id: 'item-sucata', type: 'Item', name: 'Sucata', rarity: 'Comum', range: '', duration: '', test: '', damage: '', critical: '', effect: 'Criação de itens.' },
-            { id: 'item-sucata-refinada', type: 'Item', name: 'Sucata Refinada', rarity: 'Incomum', range: '', duration: '', test: '', damage: '', critical: '', effect: 'Criação de itens.' },
-            { id: 'item-banana', type: 'Item', name: 'Banana', rarity: 'Legendário', range: '', duration: '', test: '', damage: '', critical: '', effect: 'Dá +1 DEF.' },
-            { id: 'item-baterias-elementares', type: 'Item', name: 'Baterias Elementares', rarity: 'Incomum', range: '', duration: '', test: '', damage: '', critical: '', effect: 'Fonte de energia.' },
-            { id: 'item-ervas-refinadas', type: 'Item', name: 'Ervas Refinadas', rarity: 'Comum', range: '', duration: '', test: '', damage: '', critical: '', effect: 'Cura 3 de HP e dá -1 Agilidade.' },
-            { id: 'item-pilulas-regeneradoras', type: 'Item', name: 'Pílulas regeneradoras', rarity: 'Comum', range: '', duration: '', test: '', damage: '', critical: '', effect: 'Cura 5 de HP.' },
-            { id: 'item-medidor-poder', type: 'Item', name: 'Medidor de poder', rarity: 'Incomum', range: '', duration: '', test: '', damage: '', critical: '', effect: 'Bônus de +1 em testes que visam checar algum determinado inimigo.' },
-            { id: 'item-nectar-energetico', type: 'Item', name: 'Néctar Energético', rarity: 'Comum', range: '', duration: '', test: '', damage: '', critical: '', effect: 'Bônus de +1 em testes de agilidade durante um turno.' },
-            { id: 'item-chugchug', type: 'Item', name: 'Chugchug', rarity: 'Comum', range: '', duration: '', test: '', damage: '', critical: '', effect: 'Cura 10 HP.' },
-            { id: 'item-viper', type: 'Item', name: 'Viper', rarity: 'Incomum', range: '', duration: '', test: '', damage: '1d6', critical: '', effect: '1d6 por 1 turno.' },
-            { id: 'item-viper-ruim', type: 'Item', name: 'Viper - ruim', rarity: 'Incomum', range: '', duration: '', test: '', damage: '1d6', critical: '', effect: '1d6 por 1 turno.' },
-            { id: 'equipment-vestes', type: 'Equipment', name: 'Vestes litúrgicas', rarity: 'Comum', range: '', duration: '', test: '', damage: '', critical: '', effect: '+1 DEF.' },
-            { id: 'equipment-roupas-sociais', type: 'Equipment', name: 'Roupas sociais estilosas', rarity: 'Comum', range: '', duration: '', test: '', damage: '', critical: '', effect: '+1 DEF.' }
-        ];
+            const data = await response.json();
+            if (!Array.isArray(data)) {
+                throw new Error('magic-data.json must contain an array of records.');
+            }
+
+            seedRecords = data;
+        }
 
         const fields = {
             id: document.getElementById('entryId'),
@@ -504,7 +458,24 @@
             document.cookie = 'instituteAgentAuth=; path=/; max-age=0';
         });
 
-        renderRecords();
+        async function initAdminData() {
+            try {
+                await loadSeedRecords();
+                renderRecords();
+            } catch (error) {
+                console.error(error);
+                document.getElementById('recordsList').innerHTML = `
+                    <article class="record-row">
+                        <div class="record-main">
+                            <h3>Magic archive unavailable</h3>
+                            <p>The canonical magic-data.json file could not be loaded. Run the site through a web server and verify that magic-data.json is deployed beside admin.html.</p>
+                        </div>
+                    </article>
+                `;
+            }
+        }
+
+        initAdminData();
     </script>
 </body>
 </html>

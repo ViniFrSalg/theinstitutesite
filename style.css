@@ -756,9 +756,21 @@ body {
     padding: 4rem 2rem;
 }
 
+.agent-dashboard {
+    flex-direction: column;
+    align-items: stretch;
+    width: min(1440px, 100%);
+    margin: 0 auto;
+}
+
 .login-panel,
 .agent-hero {
     width: min(560px, 100%);
+}
+
+.agent-card {
+    width: min(860px, 100%);
+    align-self: center;
 }
 
 .glass-card,
@@ -1064,6 +1076,25 @@ body {
     overflow: hidden;
 }
 
+.agent-magic-browser {
+    width: 100%;
+    margin-top: 2rem;
+}
+
+.browser-heading {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+    padding: 1.2rem;
+    border-bottom: 1px solid rgba(0, 255, 153, 0.14);
+}
+
+.browser-heading h2 {
+    font-size: 1.35rem;
+    letter-spacing: 0.8px;
+}
+
 .browser-tools {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 180px 220px;
@@ -1085,6 +1116,10 @@ body {
     gap: 1.2rem;
     padding: 1.2rem;
     background: rgba(12, 22, 56, 0.94);
+}
+
+.read-only-record {
+    grid-template-columns: minmax(220px, 0.9fr) minmax(320px, 1.25fr);
 }
 
 .record-main {
