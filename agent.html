@@ -27,8 +27,17 @@
                     <p>Classified Personnel / Systems Control</p>
                 </div>
             </div>
-            <a href="login.html" class="btn btn-secondary">LOG OUT</a>
+            <div class="agent-actions">
+                <a href="admin.html" class="btn btn-primary">MAGIC DATA CENTER</a>
+                <a href="login.html" class="btn btn-secondary" id="logoutLink">LOG OUT</a>
+            </div>
         </section>
     </main>
+    <script>
+        document.getElementById('logoutLink').addEventListener('click', function () {
+            localStorage.removeItem('instituteAgentAuth');
+            localStorage.removeItem('instituteAdminAuth');
+        });
+    </script>
 </body>
 </html>

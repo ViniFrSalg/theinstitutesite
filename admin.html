@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magic Data Center | The Institute</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="ambient-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <main class="admin-shell">
+        <section class="admin-topline">
+            <div>
+                <span class="badge">Admin Restricted</span>
+                <h1>Kloerland Magic Data Center</h1>
+                <p>Store and maintain RPG weapons, spells, equipment, and consumables from the Kloerland source sheet.</p>
+            </div>
+            <div class="admin-actions">
+                <button class="btn btn-secondary" id="exportBtn">EXPORT JSON</button>
+                <button class="btn btn-secondary" id="resetBtn">RESET SEED DATA</button>
+                <a href="login.html" class="btn btn-primary" id="logoutBtn">LOG OUT</a>
+            </div>
+        </section>
+
+        <section class="admin-metrics" aria-label="Magic database totals">
+            <div class="metric-tile">
+                <span id="totalCount">0</span>
+                <p>Total Records</p>
+            </div>
+            <div class="metric-tile">
+                <span id="spellCount">0</span>
+                <p>Spells</p>
+            </div>
+            <div class="metric-tile">
+                <span id="weaponCount">0</span>
+                <p>Weapons</p>
+            </div>
+            <div class="metric-tile">
+                <span id="itemCount">0</span>
+                <p>Items</p>
+            </div>
+        </section>
+
+        <section class="admin-workspace">
+            <form class="data-form" id="entryForm">
+                <input type="hidden" id="entryId">
+                <h2 id="formTitle">New Record</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="entryType">Type</label>
+                        <select id="entryType" required>
+                            <option value="Spell">Spell</option>
+                            <option value="Weapon">Weapon</option>
+                            <option value="Item">Item</option>
+                            <option value="Equipment">Equipment</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="entryName">Name</label>
+                        <input id="entryName" type="text" required placeholder="Record name">
+                    </div>
+                    <div class="form-group">
+                        <label for="entryRarity">Rarity</label>
+                        <input id="entryRarity" type="text" placeholder="Common, Rare, Custom">
+                    </div>
+                    <div class="form-group">
+                        <label for="entryElement">Element</label>
+                        <select id="entryElement">
+                            <option value="">None</option>
+                            <option value="Vida / Life">Green - Vida / Life</option>
+                            <option value="Força / Strength">Red - Força / Strength</option>
+                            <option value="Matéria / Matter">Yellow - Matéria / Matter</option>
+                            <option value="Entropia / Entropy">Violet - Entropia / Entropy</option>
+                            <option value="Quinto Elemento / Fifth Element">Blue - Fifth Element</option>
+                            <option value="???">Orange - ???</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="entryRange">Range</label>
+                        <input id="entryRange" type="text" placeholder="2, 5x5, ∞">
+                    </div>
+                    <div class="form-group">
+                        <label for="entryDuration">Duration</label>
+                        <input id="entryDuration" type="text" placeholder="Instantaneous, 2 turns">
+                    </div>
+                    <div class="form-group">
+                        <label for="entryTest">Test</label>
+                        <input id="entryTest" type="text" placeholder="Intelectualidade + Escopo">
+                    </div>
+                    <div class="form-group">
+                        <label for="entryDamage">Damage</label>
+                        <input id="entryDamage" type="text" placeholder="2d6+1">
+                    </div>
+                    <div class="form-group">
+                        <label for="entryCrit">Critical Damage</label>
+                        <input id="entryCrit" type="text" placeholder="2d8+2">
+                    </div>
+                    <div class="form-group form-wide">
+                        <label for="entryEffect">Special Effect</label>
+                        <textarea id="entryEffect" rows="4" placeholder="Effect, notes, cooldowns, and source cleanup notes"></textarea>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-primary" type="submit">SAVE RECORD</button>
+                    <button class="btn btn-secondary" type="button" id="clearBtn">CLEAR</button>
+                </div>
+            </form>
+
+            <section class="data-browser" aria-label="Stored magic data">
+                <div class="browser-tools">
+                    <div class="form-group">
+                        <label for="searchInput">Search</label>
+                        <input id="searchInput" type="search" placeholder="Find name, test, effect">
+                    </div>
+                    <div class="form-group">
+                        <label for="typeFilter">Filter</label>
+                        <select id="typeFilter">
+                            <option value="All">All Types</option>
+                            <option value="Spell">Spells</option>
+                            <option value="Weapon">Weapons</option>
+                            <option value="Item">Items</option>
+                            <option value="Equipment">Equipment</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="elementFilter">Element</label>
+                        <select id="elementFilter">
+                            <option value="All">All Elements</option>
+                            <option value="Vida / Life">Green - Vida / Life</option>
+                            <option value="Força / Strength">Red - Força / Strength</option>
+                            <option value="Matéria / Matter">Yellow - Matéria / Matter</option>
+                            <option value="Entropia / Entropy">Violet - Entropia / Entropy</option>
+                            <option value="Fifth Element">Blue - Fifth Element</option>
+                            <option value="???">Orange - ???</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="records-list" id="recordsList"></div>
+            </section>
+        </section>
+    </main>
+
+    <script>
+        const ADMIN_AUTH_KEY = 'instituteAdminAuth';
+        const STORAGE_KEY = 'kloerlandMagicRecords';
+        const adminParams = new URLSearchParams(window.location.search);
+
+        function storageAvailable(storage) {
+            try {
+                const testKey = '__instituteStorageTest';
+                storage.setItem(testKey, testKey);
+                storage.removeItem(testKey);
+                return true;
+            } catch (error) {
+                return false;
+            }
+        }
+
+        function setStoredFlag(key, value) {
+            if (storageAvailable(localStorage)) {
+                localStorage.setItem(key, value);
+            }
+
+            if (storageAvailable(sessionStorage)) {
+                sessionStorage.setItem(key, value);
+            }
+
+            document.cookie = `${key}=${value}; path=/; SameSite=Lax`;
+        }
+
+        function getStoredFlag(key) {
+            const cookieMatch = document.cookie
+                .split('; ')
+                .find((cookie) => cookie.startsWith(`${key}=`));
+
+            if (storageAvailable(localStorage) && localStorage.getItem(key) === 'true') {
+                return true;
+            }
+
+            if (storageAvailable(sessionStorage) && sessionStorage.getItem(key) === 'true') {
+                return true;
+            }
+
+            return cookieMatch ? cookieMatch.split('=')[1] === 'true' : false;
+        }
+
+        if (adminParams.get('adminAuth') === 'kloerland') {
+            setStoredFlag(ADMIN_AUTH_KEY, 'true');
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
+        const seedRecords = [
+            { id: 'spell-okheal', type: 'Spell', name: 'Okheal', rarity: '', element: 'Vida / Life', range: '2', duration: 'Instantânea', test: 'Intelectualidade + Cura', damage: '2d4', critical: '2d6+1', effect: 'Cura.' },
+            { id: 'spell-corte-botanico', type: 'Spell', name: 'Corte Botânico', rarity: '', element: 'Vida / Life', range: '4', duration: 'Instantânea', test: 'Agilidade + Escopo', damage: '2d4+1', critical: '2d6+3', effect: '' },
+            { id: 'spell-corrente-vinhas', type: 'Spell', name: 'Corrente de Vinhas', rarity: '', element: 'Vida / Life', range: '4', duration: '2 turnos', test: 'Intelectualidade + Visão ou Intelectualidade + Escopo', damage: '-1', critical: '-3', effect: 'Diminui qualquer teste de Agilidade e Potência do oponente.' },
+            { id: 'spell-escudo-floral', type: 'Spell', name: 'Escudo Floral', rarity: '', element: 'Vida / Life', range: '2', duration: '1 turno', test: 'Resistência + Inteligência ou Intelectualidade + Leitura', damage: '2', critical: '3', effect: 'Aumenta DEF de usuário ou aliado.' },
+            { id: 'spell-rude-buster', type: 'Spell', name: 'Rude Buster', rarity: '', element: 'Força / Strength', range: '2', duration: 'Instantânea', test: 'Potência + Escopo', damage: '2d8+1', critical: '2d10+4', effect: 'Cooldown de 1 turno.' },
+            { id: 'spell-chuva-pirotecnica', type: 'Spell', name: 'Chuva pirotécnica', rarity: '', element: 'Força / Strength', range: '3 e 3x3', duration: 'Instantânea', test: 'Potência + Inteligência ou Intelectualidade + Escopo', damage: '2d4', critical: '2d6', effect: 'Dano em área.' },
+            { id: 'spell-vontade-efervescente', type: 'Spell', name: 'Vontade efervescente', rarity: '', element: 'Força / Strength', range: '0', duration: '2 turnos', test: 'Intelectualidade + Luta', damage: '2', critical: '2', effect: 'Aumenta teste de Potência.' },
+            { id: 'spell-salvaguarda-material', type: 'Spell', name: 'Salvaguarda Material', rarity: '', element: 'Matéria / Matter', range: '1', duration: '1 turno', test: 'Intelectualidade + Atletismo ou Resistência + Inteligência', damage: '1', critical: '3', effect: 'Aumenta DEF de usuário e aliado.' },
+            { id: 'spell-diamante', type: 'Spell', name: 'Pó de Diamante', rarity: '', element: 'Matéria / Matter', range: '4', duration: 'Instantânea', test: 'Intelectualidade + Escopo', damage: '3d4', critical: '4d4+2', effect: 'Dano aumenta em +1 caso esteja gelado. Em crítico, inimigo recebe -3 em testes de agilidade por 1 turno.' },
+            { id: 'spell-cristalizacao-sublime', type: 'Spell', name: 'Cristalização Sublime', rarity: '', element: 'Matéria / Matter', range: '1', duration: 'Instantânea', test: 'Intelectualidade + Engenharia ou Potência + Inteligência', damage: '0', critical: '0', effect: 'Permite a criação e manipulação sofisticada de pequenas estruturas sólidas.' },
+            { id: 'spell-definicao-tempo', type: 'Spell', name: 'Definição do tempo', rarity: '', element: 'Matéria / Matter', range: '∞', duration: '2 turnos', test: 'Intelectualidade + Inteligência', damage: '0', critical: '0', effect: 'O tempo pode ser levemente alterado pelo poder da Matéria, podendo causar precipitações e leves variações de temperatura.' },
+            { id: 'spell-deteccao-decaimento', type: 'Spell', name: 'Detecção de Decaimento', rarity: '', element: 'Entropia / Entropy', range: '5x5', duration: '3 turnos', test: 'Intelectualidade + Leitura ou Intelectualidade + Visão', damage: '0', critical: '0', effect: 'Permite ler o campo de batalha, detectando presenças básicas e mágicas ao alcance. A efetividade depende do resultado da rolagem.' },
+            { id: 'spell-aura-desordenada', type: 'Spell', name: 'Aura Desordenada', rarity: '', element: 'Entropia / Entropy', range: '4', duration: '2 turnos', test: 'Intelectualidade + Sagacidade ou Carisma + Inteligência', damage: '-2', critical: '-3', effect: 'Diminui qualquer teste do oponente em Intelectualidade ou qualquer outro teste mental.' },
+            { id: 'spell-show-luzes', type: 'Spell', name: 'Show de Luzes', rarity: '', element: 'Entropia / Entropy', range: '5', duration: 'Instantânea', test: 'Intelectualidade + Escopo ou Potência + Inteligência', damage: '4d6', critical: '4d6+2d4', effect: 'Player leva 1d4 de dano. Caso acerte, alvo perde 2 turnos e fica com -1 DEF. Caso erre, alvo perde 3 turnos.' },
+            { id: 'spell-descarga-raios-catodicos', type: 'Spell', name: 'Descarga de Raios Catódicos', rarity: '', element: 'Entropia / Entropy', range: '4', duration: 'Instantânea', test: 'Intelectualidade + Escopo ou Potência + Escopo', damage: '2d6', critical: '2d6+1d4', effect: 'Em dano crítico, alvo faz teste de sanidade ou forma dificuldade 14. Se falhar, perde um turno paralisado.' },
+            { id: 'spell-green-buster', type: 'Spell', name: 'Green Buster', rarity: '', element: 'Vida / Life', range: '5', duration: 'Instantânea', test: 'Potência + Escopo', damage: '3d6', critical: '3d6+2', effect: '' },
+            { id: 'spell-vine-destroyer', type: 'Spell', name: 'Vine Destroyer', rarity: '', element: 'Vida / Life', range: '7x7', duration: 'Instantânea', test: 'Agilidade + Luta ou Intelectualidade + Escopo', damage: '2d6', critical: '2d6+3', effect: '' },
+            { id: 'spell-betterheal', type: 'Spell', name: 'BetterHeal', rarity: '', element: 'Vida / Life', range: '2', duration: 'Instantânea', test: 'Intelectualidade + Cura', damage: '2d6+1', critical: '2d8+2', effect: 'Cura.' },
+            { id: 'spell-corrente-espinhosa', type: 'Spell', name: 'Corrente Espinhosa', rarity: '', element: 'Vida / Life', range: '5', duration: '2 turnos', test: 'Intelectualidade + Visão ou Intelectualidade + Escopo', damage: '-1, 1d6', critical: '-3, 1d6', effect: 'Diminui qualquer teste de Agilidade e Potência do oponente; dano no início do turno do oponente.' },
+            { id: 'spell-ruder-buster', type: 'Spell', name: 'Ruder Buster', rarity: '', element: 'Força / Strength', range: '2', duration: 'Instantânea', test: 'Potência + Escopo; Resistência + Luta dificuldade 14 para não tomar 1d4', damage: '2d10+1', critical: '2d10+2+1d8', effect: 'Cooldown de 1 turno.' },
+            { id: 'spell-lamina-flamejante', type: 'Spell', name: 'Lâmina Flamejante', rarity: '', element: 'Força / Strength', range: '3', duration: 'Instantânea / 2 turnos', test: 'Potência + Atletismo ou Agilidade + Luta', damage: '2d4+1 / 1d4', critical: '2d4+1 / 1d4', effect: 'Oponente faz teste de Resistência + Luta para não ser queimado, com dificuldade sendo a defesa do inimigo.' },
+            { id: 'spell-parrying-buster', type: 'Spell', name: 'Parrying Buster', rarity: '', element: 'Força / Strength', range: '2', duration: '1 turno', test: 'Potência + Atletismo ou Agilidade + Luta', damage: '2', critical: '2', effect: 'Permite contrarrolar por amigos na range.' },
+            { id: 'spell-colorful-rain', type: 'Spell', name: 'Colorful Rain', rarity: '', element: 'Matéria / Matter', range: '5 e 7x7', duration: 'Instantâneo', test: 'Intelectualidade + Leitura ou Potência + Inteligência', damage: '1d8', critical: '1d6+1d4', effect: '' },
+            { id: 'spell-fusao-frio', type: 'Spell', name: 'Fusão à frio', rarity: '', element: 'Matéria / Matter', range: '1', duration: '2 turnos', test: 'Intelectualidade + Atletismo ou Resistência + Inteligência', damage: '2', critical: '4', effect: 'Aumenta sua DEF e de aliado em 2.' },
+            { id: 'spell-starfall', type: 'Spell', name: 'StarFall', rarity: '', element: 'Entropia / Entropy', range: '5 e 5x5', duration: 'Instantâneo', test: 'Agilidade + Inteligência ou Intelectualidade + Escopo', damage: '1d10', critical: '2d6', effect: '' },
+            { id: 'spell-trovao-catodico', type: 'Spell', name: 'Trovão Catódico Senoidal', rarity: '', element: 'Entropia / Entropy', range: '5', duration: 'Instantâneo', test: 'Intelectualidade + Escopo ou Potência + Escopo', damage: '2d8', critical: '2d8+1d4', effect: 'Em dano crítico, alvo faz teste de sanidade ou forma dificuldade 14. Se falhar, perde um turno paralisado.' },
+
+            { id: 'weapon-chicote-neuronico', type: 'Weapon', name: 'Chicote Neurônico', rarity: 'Comum', range: '3', duration: '', test: '', damage: '1d6', critical: '2d4+1', effect: 'Em dano crítico, alvo faz teste de sanidade ou forma dificuldade 14. Se falhar, perde um turno paralisado.' },
+            { id: 'weapon-potencializador-alfa', type: 'Weapon', name: 'Potencializador Alfa', rarity: 'Comum', range: '0', duration: '', test: '', damage: '0', critical: '0', effect: 'Dá +2 de dano para qualquer magia ofensiva conjurada; +4 caso crítico.' },
+            { id: 'weapon-cajado-sagrado', type: 'Weapon', name: 'Cajado Sagrado', rarity: 'Comum', range: '2', duration: '', test: '', damage: '1d4', critical: '2d4', effect: 'Em acerto crítico, pode curar 3 HP de um aliado.' },
+            { id: 'weapon-terco-cristalino', type: 'Weapon', name: 'Terço Cristalino', rarity: 'Comum', range: '0', duration: '', test: '', damage: '0', critical: '0', effect: 'Dá +2 para magias de vida; +4 em acertos críticos.' },
+            { id: 'weapon-sabre-neuronico', type: 'Weapon', name: 'Sabre Neurônico', rarity: 'Incomum', range: '2', duration: '', test: '', damage: '2d4 (2d6)', critical: '2d4+3 (2d6+4)', effect: 'Em dano crítico, alvo faz teste de sanidade ou forma dificuldade 14. Se falhar, perde um turno paralisado.' },
+            { id: 'weapon-ultra-desintegrador-laser-v2', type: 'Weapon', name: 'ULTRA DESINTEGRADOR À LASER VERSÃO 2', rarity: 'Comum', range: '5', duration: '', test: '', damage: '1d6', critical: '2d6', effect: '' },
+            { id: 'weapon-wf51-mata-pombo', type: 'Weapon', name: 'WF-51 - Mata-pombo', rarity: 'Comum', range: '7', duration: '', test: '', damage: '1d8', critical: '1d8+1d4', effect: '' },
+            { id: 'weapon-qb75', type: 'Weapon', name: 'QB-75 - Desintegrador Tático', rarity: 'Incomum', range: '3', duration: '', test: '', damage: '2d6', critical: '2d6+3', effect: 'Ricochete: ao conseguir acerto crítico, você leva 2 de dano ao atirar.' },
+            { id: 'weapon-martelo-pequeno', type: 'Weapon', name: 'Martelo Pequeno', rarity: 'Comum', range: '2', duration: '', test: '', damage: '1d4', critical: '2d4', effect: '' },
+            { id: 'weapon-pequeno-escudo-lei', type: 'Weapon', name: 'Pequeno Escudo da Lei', rarity: 'Comum', range: '2', duration: '', test: '', damage: '0', critical: '0', effect: 'Permite ao Jurista adicionar +1 DEF a aliado próximo ou a si mesmo. Pode dar +2 DEF a aliado à custo de seu turno. Efeito temporário até o próximo turno do Jurista.' },
+            { id: 'weapon-bastao-eletrico', type: 'Weapon', name: 'Bastão elétrico', rarity: 'Comum', range: '2', duration: '', test: '', damage: '1d8', critical: '2d4+2', effect: '' },
+            { id: 'weapon-espada-grama', type: 'Weapon', name: 'Espada de grama', rarity: 'Incomum', range: '3', duration: '', test: '', damage: '2d4 (2d6+1)', critical: '3d4 (6)', effect: 'Caso consiga crítico, oponente é envolvido em vinhas e tem -2 em testes de Agilidade por um turno.' },
+            { id: 'weapon-wf52-mata-pombos', type: 'Weapon', name: 'WF-52 - Mata-pombos', rarity: 'Incomum', range: '7', duration: '', test: '', damage: '1d10', critical: '1d10+1d4', effect: '' },
+            { id: 'weapon-revoada', type: 'Weapon', name: 'REVOADA', rarity: 'Customizado', range: '5', duration: '', test: '', damage: '1d8+1 / 2*1d6+1 / 1d8+3', critical: '1d8+5 / 1d4+4,1d6+1 / 1d8+8', effect: 'Entropia / Entropy: alvo faz contrateste; se falhar fica com -2.' },
+            { id: 'weapon-sabre-luz', type: 'Weapon', name: 'Sabre de Luz', rarity: 'Customizado', range: '2 / 5', duration: '', test: '', damage: '2d6 / 1d8', critical: '2d6+3 / 1d8+4', effect: 'Paralisado em caso crítico.' },
+            { id: 'weapon-sabre-cavaleira', type: 'Weapon', name: 'Sabre da Cavaleira', rarity: 'Raro', range: '3', duration: '', test: '', damage: '2d8+2', critical: '2d8+4', effect: '' },
+
+            { id: 'item-frasco-pilula', type: 'Item', name: 'Frasco/Pílula', rarity: 'Comum', range: '', duration: '', test: '', damage: '', critical: '', effect: 'Cura 10 HP.' },
+            { id: 'item-sanduiche', type: 'Item', name: 'Sanduíche', rarity: 'Comum', range: '', duration: '', test: '', damage: '', critical: '', effect: 'Cura 4 HP.' },
+            { id: 'item-sucata', type: 'Item', name: 'Sucata', rarity: 'Comum', range: '', duration: '', test: '', damage: '', critical: '', effect: 'Criação de itens.' },
+            { id: 'item-sucata-refinada', type: 'Item', name: 'Sucata Refinada', rarity: 'Incomum', range: '', duration: '', test: '', damage: '', critical: '', effect: 'Criação de itens.' },
+            { id: 'item-banana', type: 'Item', name: 'Banana', rarity: 'Legendário', range: '', duration: '', test: '', damage: '', critical: '', effect: 'Dá +1 DEF.' },
+            { id: 'item-baterias-elementares', type: 'Item', name: 'Baterias Elementares', rarity: 'Incomum', range: '', duration: '', test: '', damage: '', critical: '', effect: 'Fonte de energia.' },
+            { id: 'item-ervas-refinadas', type: 'Item', name: 'Ervas Refinadas', rarity: 'Comum', range: '', duration: '', test: '', damage: '', critical: '', effect: 'Cura 3 de HP e dá -1 Agilidade.' },
+            { id: 'item-pilulas-regeneradoras', type: 'Item', name: 'Pílulas regeneradoras', rarity: 'Comum', range: '', duration: '', test: '', damage: '', critical: '', effect: 'Cura 5 de HP.' },
+            { id: 'item-medidor-poder', type: 'Item', name: 'Medidor de poder', rarity: 'Incomum', range: '', duration: '', test: '', damage: '', critical: '', effect: 'Bônus de +1 em testes que visam checar algum determinado inimigo.' },
+            { id: 'item-nectar-energetico', type: 'Item', name: 'Néctar Energético', rarity: 'Comum', range: '', duration: '', test: '', damage: '', critical: '', effect: 'Bônus de +1 em testes de agilidade durante um turno.' },
+            { id: 'item-chugchug', type: 'Item', name: 'Chugchug', rarity: 'Comum', range: '', duration: '', test: '', damage: '', critical: '', effect: 'Cura 10 HP.' },
+            { id: 'item-viper', type: 'Item', name: 'Viper', rarity: 'Incomum', range: '', duration: '', test: '', damage: '1d6', critical: '', effect: '1d6 por 1 turno.' },
+            { id: 'item-viper-ruim', type: 'Item', name: 'Viper - ruim', rarity: 'Incomum', range: '', duration: '', test: '', damage: '1d6', critical: '', effect: '1d6 por 1 turno.' },
+            { id: 'equipment-vestes', type: 'Equipment', name: 'Vestes litúrgicas', rarity: 'Comum', range: '', duration: '', test: '', damage: '', critical: '', effect: '+1 DEF.' },
+            { id: 'equipment-roupas-sociais', type: 'Equipment', name: 'Roupas sociais estilosas', rarity: 'Comum', range: '', duration: '', test: '', damage: '', critical: '', effect: '+1 DEF.' }
+        ];
+
+        const fields = {
+            id: document.getElementById('entryId'),
+            type: document.getElementById('entryType'),
+            name: document.getElementById('entryName'),
+            rarity: document.getElementById('entryRarity'),
+            element: document.getElementById('entryElement'),
+            range: document.getElementById('entryRange'),
+            duration: document.getElementById('entryDuration'),
+            test: document.getElementById('entryTest'),
+            damage: document.getElementById('entryDamage'),
+            critical: document.getElementById('entryCrit'),
+            effect: document.getElementById('entryEffect')
+        };
+
+        const entryForm = document.getElementById('entryForm');
+        const recordsList = document.getElementById('recordsList');
+        const searchInput = document.getElementById('searchInput');
+        const typeFilter = document.getElementById('typeFilter');
+        const elementFilter = document.getElementById('elementFilter');
+        const formTitle = document.getElementById('formTitle');
+
+        if (!getStoredFlag(ADMIN_AUTH_KEY)) {
+            window.location.href = 'login.html';
+        }
+
+        function loadRecords() {
+            const saved = storageAvailable(localStorage) ? localStorage.getItem(STORAGE_KEY) : null;
+            if (!saved) {
+                saveRecords(seedRecords);
+                return [...seedRecords];
+            }
+
+            try {
+                const records = JSON.parse(saved);
+                const existingIds = new Set(records.map((record) => record.id));
+                const seedById = new Map(seedRecords.map((record) => [record.id, record]));
+                const upgradedRecords = records.map((record) => {
+                    const seedRecord = seedById.get(record.id);
+
+                    if (!seedRecord) {
+                        return { element: '', ...record };
+                    }
+
+                    return {
+                        ...seedRecord,
+                        ...record,
+                        element: record.element || seedRecord.element || ''
+                    };
+                });
+                const upgradedIds = new Set(upgradedRecords.map((record) => record.id));
+                const missingSeeds = seedRecords.filter((record) => !upgradedIds.has(record.id));
+
+                if (missingSeeds.length > 0) {
+                    const mergedRecords = [...upgradedRecords, ...missingSeeds];
+                    saveRecords(mergedRecords);
+                    return mergedRecords;
+                }
+
+                saveRecords(upgradedRecords);
+                return upgradedRecords;
+            } catch (error) {
+                saveRecords(seedRecords);
+                return [...seedRecords];
+            }
+        }
+
+        function saveRecords(records) {
+            if (storageAvailable(localStorage)) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+            }
+        }
+
+        function getRecords() {
+            return loadRecords();
+        }
+
+        function renderRecords() {
+            const search = searchInput.value.trim().toLowerCase();
+            const selectedType = typeFilter.value;
+            const selectedElement = elementFilter.value;
+            const records = getRecords();
+            const filtered = records.filter((record) => {
+                const matchesType = selectedType === 'All' || record.type === selectedType;
+                const matchesElement = selectedElement === 'All' || record.element === selectedElement;
+                const content = Object.values(record).join(' ').toLowerCase();
+                return matchesType && matchesElement && content.includes(search);
+            });
+
+            document.getElementById('totalCount').textContent = records.length;
+            document.getElementById('spellCount').textContent = records.filter((record) => record.type === 'Spell').length;
+            document.getElementById('weaponCount').textContent = records.filter((record) => record.type === 'Weapon').length;
+            document.getElementById('itemCount').textContent = records.filter((record) => record.type === 'Item' || record.type === 'Equipment').length;
+
+            recordsList.innerHTML = filtered.map((record) => `
+                <article class="record-row">
+                    <div class="record-main">
+                        <div class="record-tags">
+                            <span class="record-type">${record.type}</span>
+                            ${record.type === 'Spell' ? `<span class="element-tag ${getElementClass(record.element)}">${escapeHtml(record.element || 'Unclassified')}</span>` : ''}
+                        </div>
+                        <h3>${escapeHtml(record.name)}</h3>
+                        <p>${escapeHtml(record.effect || 'No special effect recorded.')}</p>
+                    </div>
+                    <dl class="record-stats">
+                        <div><dt>Rarity</dt><dd>${escapeHtml(record.rarity || '-')}</dd></div>
+                        <div><dt>Element</dt><dd>${escapeHtml(record.type === 'Spell' ? record.element || '-' : '-')}</dd></div>
+                        <div><dt>Range</dt><dd>${escapeHtml(record.range || '-')}</dd></div>
+                        <div><dt>Duration</dt><dd>${escapeHtml(record.duration || '-')}</dd></div>
+                        <div><dt>Test</dt><dd>${escapeHtml(record.test || '-')}</dd></div>
+                        <div><dt>Damage</dt><dd>${escapeHtml(record.damage || '-')}</dd></div>
+                        <div><dt>Critical</dt><dd>${escapeHtml(record.critical || '-')}</dd></div>
+                    </dl>
+                    <div class="record-actions">
+                        <button type="button" class="mini-btn" data-action="edit" data-id="${record.id}">Edit</button>
+                        <button type="button" class="mini-btn danger" data-action="delete" data-id="${record.id}">Delete</button>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        function escapeHtml(value) {
+            return String(value)
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#039;');
+        }
+
+        function getElementClass(element) {
+            const elementMap = {
+                'Vida / Life': 'element-life',
+                'Força / Strength': 'element-strength',
+                'Matéria / Matter': 'element-matter',
+                'Entropia / Entropy': 'element-entropy',
+                'Fifth Element': 'element-fifth',
+                '???': 'element-unknown'
+            };
+
+            return elementMap[element] || 'element-none';
+        }
+
+        function clearForm() {
+            entryForm.reset();
+            fields.id.value = '';
+            formTitle.textContent = 'New Record';
+        }
+
+        entryForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const records = getRecords();
+            const record = {
+                id: fields.id.value || `record-${Date.now()}`,
+                type: fields.type.value,
+                name: fields.name.value.trim(),
+                rarity: fields.rarity.value.trim(),
+                element: fields.type.value === 'Spell' ? fields.element.value : '',
+                range: fields.range.value.trim(),
+                duration: fields.duration.value.trim(),
+                test: fields.test.value.trim(),
+                damage: fields.damage.value.trim(),
+                critical: fields.critical.value.trim(),
+                effect: fields.effect.value.trim()
+            };
+
+            if (!record.name) {
+                fields.name.focus();
+                return;
+            }
+
+            const existingIndex = records.findIndex((item) => item.id === record.id);
+            if (existingIndex >= 0) {
+                records[existingIndex] = record;
+            } else {
+                records.unshift(record);
+            }
+
+            saveRecords(records);
+            clearForm();
+            renderRecords();
+        });
+
+        recordsList.addEventListener('click', function (event) {
+            const button = event.target.closest('button[data-action]');
+            if (!button) return;
+
+            const records = getRecords();
+            const record = records.find((item) => item.id === button.dataset.id);
+            if (!record) return;
+
+            if (button.dataset.action === 'delete') {
+                saveRecords(records.filter((item) => item.id !== record.id));
+                renderRecords();
+                return;
+            }
+
+            fields.id.value = record.id;
+            fields.type.value = record.type;
+            fields.name.value = record.name;
+            fields.rarity.value = record.rarity;
+            fields.element.value = record.element || '';
+            fields.range.value = record.range;
+            fields.duration.value = record.duration;
+            fields.test.value = record.test;
+            fields.damage.value = record.damage;
+            fields.critical.value = record.critical;
+            fields.effect.value = record.effect;
+            formTitle.textContent = `Editing ${record.name}`;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        document.getElementById('clearBtn').addEventListener('click', clearForm);
+        searchInput.addEventListener('input', renderRecords);
+        typeFilter.addEventListener('change', renderRecords);
+        elementFilter.addEventListener('change', renderRecords);
+
+        document.getElementById('resetBtn').addEventListener('click', function () {
+            saveRecords(seedRecords);
+            clearForm();
+            renderRecords();
+        });
+
+        document.getElementById('exportBtn').addEventListener('click', function () {
+            const data = JSON.stringify(getRecords(), null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'kloerland-magic-data.json';
+            link.click();
+            URL.revokeObjectURL(url);
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', function () {
+            if (storageAvailable(localStorage)) {
+                localStorage.removeItem('instituteAdminAuth');
+                localStorage.removeItem('instituteAgentAuth');
+            }
+
+            if (storageAvailable(sessionStorage)) {
+                sessionStorage.removeItem('instituteAdminAuth');
+                sessionStorage.removeItem('instituteAgentAuth');
+            }
+
+            document.cookie = 'instituteAdminAuth=; path=/; max-age=0';
+            document.cookie = 'instituteAgentAuth=; path=/; max-age=0';
+        });
+
+        renderRecords();
+    </script>
+</body>
+</html>

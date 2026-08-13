@@ -24,12 +24,37 @@
                 </div>
                 <button class="btn btn-primary login-btn" id="loginBtn">SIGN IN</button>
                 <div class="login-message" id="loginMessage"></div>
-                <p class="login-hint">Default credentials available for agent <strong>abc</strong> with password <strong>123</strong>.</p>
+                <p class="login-hint">Agent: <strong>abc</strong> / <strong>123</strong>. Admin: <strong>admin</strong> / <strong>kloerland</strong>.</p>
             </div>
         </section>
     </main>
 
     <script>
+        const ADMIN_AUTH_KEY = 'instituteAdminAuth';
+        const AGENT_AUTH_KEY = 'instituteAgentAuth';
+
+        function setAuthFlag(key) {
+            let stored = false;
+
+            try {
+                localStorage.setItem(key, 'true');
+                stored = true;
+            } catch (error) {
+                stored = false;
+            }
+
+            try {
+                sessionStorage.setItem(key, 'true');
+                stored = true;
+            } catch (error) {
+                stored = stored || false;
+            }
+
+            if (!stored) {
+                document.cookie = `${key}=true; path=/; SameSite=Lax`;
+            }
+        }
+
         document.getElementById('loginBtn').addEventListener('click', function () {
             const serial = document.getElementById('serialCode').value.trim();
             const password = document.getElementById('password').value;
@@ -40,7 +65,13 @@
                 return;
             }
 
-            if (serial.toLowerCase() === 'abc' && password === '123') {
+            const normalizedSerial = serial.toLowerCase();
+
+            if (normalizedSerial === 'admin' && password === 'kloerland') {
+                setAuthFlag(ADMIN_AUTH_KEY);
+                window.location.href = 'admin.html?adminAuth=kloerland';
+            } else if (normalizedSerial === 'abc' && password === '123') {
+                setAuthFlag(AGENT_AUTH_KEY);
                 window.location.href = 'agent.html';
             } else {
                 message.textContent = 'Invalid Serial Identification Code or password.';
