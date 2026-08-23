@@ -1,37 +1,41 @@
 # ◆ THE INSTITUTE ◆
 
-> *A fantasy-science organization website for planned future RPG*
+> *A silly fantasy-science RPG website for a tabletop session*
 
 ---
 
 ## 🌌 About This Project
 
-Welcome to **The Institute** — a fictional research organization from the upcoming "KLOERLAND" universe. This is a test website showcasing a futuristic, glossy design aesthetic inspired by **Frutiger Aero** design principles, featuring shimmering blues and greens.
+Welcome to **The Institute**, a fictional research organization in the KLOERLAND universe. This is a playful in-game website for a silly tabletop RPG currently being played with friends. It is meant to make the session feel bigger, stranger, and more official than it really is.
 
 ### What is The Institute?
 
-The Institute is an advanced research division within a game world where science meets fantasy. It houses multiple specialized departments dedicated to extraordinary research:
+The Institute is an advanced research division in a world where science meets fantasy, questionable experiments, and agents with too much responsibility. The site currently includes:
 
-- **Holder 1** — [TEXT HERE]
+- Agent profiles with stats, skills, equipment, and money
+- A public archive of RPG spells, weapons, and items
+- An admin page for maintaining the magic archive during development
 
 ---
 
 ## 🎮 RPG Context
 
-This website serves as an **in-game web interface** for The Institute within an RPG universe. It currently takes the form of a static website, but there's room for improvement!
+This website is currently being used as an in-game companion for a tabletop session. It is a static front end, so the pages are intentionally lightweight and a little theatrical rather than a production game backend. The goal is to give the players a fun place to check their agents and the growing collection of ridiculous magic equipment.
 
 ---
 
 ## 👨‍💻 About the Developer
 
-This is a **test/learning project** made by a newbie HTML/CSS developer. It's a work in progress, and feedback is always welcome! 
+This is a small learning project made for the table and is still evolving alongside the campaign. Expect unfinished corners, improvised lore, and changes as the RPG develops.
+
+## Running Locally
+
+Because the pages load JSON data with `fetch`, run the site through a local web server rather than opening the HTML files directly. For example:
+
+```bash
+python3 -m http.server
+```
+
+Then open `http://localhost:8000/` in a browser.
 
 ---
-
-## Magic Archive Data Flow
-
-`magic-data.json` is the canonical read-only dataset used by both `admin.html` and `agent.html`.
-
-The admin page keeps its working edits in browser `localStorage` and can export the edited dataset as a JSON file. Because this project is currently a static website, a browser cannot directly overwrite the deployed `magic-data.json`. To publish admin changes for all agents, export the JSON and replace the site's `magic-data.json` with that file.
-
-Agents only read `magic-data.json` and have no edit/delete controls. The agent dashboard also requires the normal agent login flag before displaying the archive.

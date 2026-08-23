@@ -1,0 +1,63 @@
+[
+  {
+    "id": "ellias",
+    "name": "Agent Ellias Gramforge",
+    "status": "ACTIVE",
+    "hp": {"current": 12, "max": 26},
+    "def": 15,
+    "stats": {"pot": 0, "res": 1, "agi": 3, "car": 1, "int": 2},
+    "pericias": ["Engenharia (+4)", "Escopo (+2)", "Sanidade (+2)"],
+    "habilidadesArmas": ["Revoada", "Cristalização Sublime", "Cristalização Ampla"],
+    "dinheiro:": ["80"],
+    "inventario": ["Chocolate Quente (+10 HP) x3", "Medidor de Poder (+1)", "Sanduiche x3", "Flashbang x1", "Sucata x1", "Frasco (+10 HP) x1", "Bateria Especial (Matéria) x1", "Pilula x1", "PARAFUSADEIRA DOURADA x1", "Sabre p/Yodacu"]
+  },
+  {
+    "id": "rato",
+    "name": "Agent Favour 'Rato' Rio",
+    "status": "ACTIVE",
+    "hp": {"current": 26, "max": 26},
+    "def": 14,
+    "stats": {"pot": 0, "res": 1, "agi": 1, "car": 2, "int": 2},
+    "pericias": ["Inteligência (+2)", "Sagacidade (+4)"],
+    "habilidadesArmas": ["Show de Luzes", "Banish!", "Cajado Sagrado"],
+    "dinheiro:": ["450"],
+    "inventario": ["Torta (+4 HP)"]
+  },
+  {
+    "id": "tupi",
+    "name": "Agent Tupihani Davos",
+    "status": "ACTIVE",
+    "hp": {"current": 19, "max": 30},
+    "def": 14,
+    "stats": {"pot": 3, "res": 1, "agi": 1, "car": 0, "int": 1},
+    "pericias": ["Luta (+2)", "Escopo (+4)"],
+    "habilidadesArmas": ["Sabre de Luz", "Rude Buster", "Cataclismo"],
+    "dinheiro:": ["30"],
+    "inventario": ["Banana (+1 DEF)"]
+  },
+  {
+    "id": "hamanabe",
+    "name": "Agent Hamanabe",
+    "status": "ACTIVE",
+    "hp": {"current": 3, "max": 26},
+    "def": 13,
+    "stats": {"pot": 1, "res": 1, "agi": 1, "car": 3, "int": 1},
+    "pericias": ["Cura (+2)", "Visão (+2)", "Sagacidade (+2)", "Inteligência (+2)"],
+    "habilidadesArmas": ["Corrente de Vinhas", "Espada de Grama", "'Espinafre(?)'"],
+    "dinheiro:": ["120"],
+    "inventario": ["Kit de Jardinagem", "Plantas que Curam(?) (+3 HP)(-1 Agilidade)", "Florzinha! :)", "Torta (+4 HP)", "Isqueiro"]
+  },
+  {
+    "id": "yodacu",
+    "name": "Agent Yodacu",
+    "status": "ACTIVE",
+    "hp": {"current": 13, "max": 26},
+    "def": 13,
+    "stats": {"pot": 0, "res": 1, "agi": 2, "car": 1, "int": 2},
+    "pericias": ["Engenharia (+2)", "Inteligência (+2)", "Atletismo (+2)"],
+    "habilidadesArmas": ["Sabre de Luz do Yodacu", "Sabre da Cavaleira", "Descarga de Raios Catódicos", "Hiperaceleração"],
+    "dinheiro:": ["30"],
+    "inventario": ["Medidor de Poder (+1)", "Sanduiche x3 (+4HP)", "Pão com carne x1 (+5HP)", "Sucatas de Qualidade x5", "Bateria Especial (Entropia) x1", "Torta (+4 HP)"]
+  }
+
+]
