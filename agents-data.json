@@ -9,7 +9,7 @@
     "pericias": ["Engenharia (+4)", "Escopo (+2)", "Sanidade (+2)"],
     "habilidadesArmas": ["Revoada", "Cristalização Sublime", "Cristalização Ampla"],
     "dinheiro:": ["80"],
-    "inventario": ["Chocolate Quente (+10 HP) x3", "Medidor de Poder (+1)", "Sanduiche x3", "Flashbang x1", "Sucata x1", "Frasco (+10 HP) x1", "Bateria Especial (Matéria) x1", "Pilula x1", "PARAFUSADEIRA DOURADA x1", "Sabre p/Yodacu"]
+    "inventario": ["Chocolate Quente (+10 HP) x3", "Medidor de Poder (+1)", "Sanduiche x3", "Flashbang x1", "Sucata x1", "Frasco (+10 HP) x1", "Bateria Especial (Matéria) x1", "Pilula x1", "PARAFUSADEIRA DOURADA x1"]
   },
   {
     "id": "rato",
