@@ -24,7 +24,7 @@ details { max-width: 42rem; margin: 1rem auto 0; line-height: 1.8; }
 .deadpan h1 { font-size: 1.1rem; }
 .proclamation h1 { font-weight: bold; line-height: 2; }
 .ominous h1 { color: #d6b8b8; letter-spacing: .12em; }
-.key h1 { color: #e4ce83; letter-spacing: .25em; }
+.key h1 { color: #5599ff; letter-spacing: .25em; }
 .gentle h1 { font-family: Georgia, serif; }
 .oath h1 { font-size: clamp(1rem, 3vw, 1.2rem); text-align: left; line-height: 2; overflow-wrap: anywhere; }
 .stardust h1 { color: #b8bed8; letter-spacing: .08em; }
