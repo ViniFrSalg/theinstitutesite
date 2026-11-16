@@ -65,7 +65,7 @@ export const story = {
     charu: { links: backToQuestion, text: 'Você não tem tacos suficientes.', style: 'deadpan', music: 'spring' },
     kid: { links: backToQuestion, text: 'Mais um nome perdido sob a poeira estelar.', style: 'stardust', music: 'spring' },
     comerciante: { links: backToQuestion, text: 'Ele conspira.', style: 'whisper', music: 'spring' },
-    johnny: { links: backToQuestion, text: 'VOCÊ NÃO PERDERIA A OPORTUNIDADE DE FAZER NEGÓCIO COM JONNY LUCKYMANN', style: 'salesman', music: 'spring' },
+    johnny: { links: backToQuestion, text: 'VOCÊ NÃO PERDERIA A OPORTUNIDADE DE FAZER NEGÓCIO COM JOHNNY LUCKYMANN', style: 'salesman', music: 'spring' },
     esquecimento: { links: backToQuestion,
       text: 'Não era esse o nome.',
       music: 'spring',
