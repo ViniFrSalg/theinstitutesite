@@ -15,6 +15,15 @@ Each page can define:
 - `fallback`: destination for an unmatched, nonempty answer. Omit to keep players on the question.
 - `links`: optional `{ label, to }` navigation links.
 - `music`: a key in `story.tracks`. Omit for silence.
+- `style`: a presentation class defined in `style.css` (for example `life`, `oath`, or `whisper`).
+- `highlights`: literal strings to display in green within the heading, such as `['VIDA']`.
+- `title`: browser tab title, useful for image-only pages.
+- `image`: `{ src, alt, style?, sound?, label? }`. `sound` makes the image a keyboard-accessible button playing that local audio file; `label` names the button.
+
+An answer branch can set `action: 'reset'` to reload its `to` page with a blank
+form and a new audio player (used by Gaia). Other answers navigate without reloading.
+Sound effects stop when leaving a page and respect the mute control.
+Image-only pages omit `text` and `question`; Terra also omits `music` for silence.
 
 Answers ignore capitalization and surrounding whitespace, but not spelling,
 accents, punctuation, or spaces within a name. Empty answers never navigate.
@@ -61,3 +70,12 @@ performed by **ROSA Pianist**.
 The OGG is unmodified. The MP3 is a format conversion for browser compatibility.
 Playback loops at reduced volume; the recording has not been cut or rearranged.
 The recording is licensed for reuse with attribution, not copyright-free.
+
+## Other media
+
+- `images/earth.jpg`: [The Blue Marble](https://commons.wikimedia.org/wiki/File:The_Blue_Marble.jpg), NASA/Apollo 17 crew, public domain (NASA). Original file bundled unchanged; blur, inversion, and contrast are applied with CSS only.
+- `images/car.jpg`: [Carro rojo](https://commons.wikimedia.org/wiki/File:Carro_rojo.jpg), Santiglzt, [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/). Bundled unchanged.
+- `audio/horn.wav`: original synthesized two-tone horn created for this project, with no sampled recordings. Dedicated to [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/). Mono PCM, 44.1 kHz, 0.65 seconds; 350/440 Hz tones with harmonics and a short attack/release envelope.
+
+Regression checks (when Playwright is installed): start the local server on port
+8765, then run `node arg/check.mjs`. Override its URL with `ARG_BASE_URL` if needed.

@@ -1,4 +1,4 @@
-import { story, resolveAnswer } from './config.js';
+import { story, resolveAnswer, matchAnswer } from './config.js';
 
 const main = document.querySelector('#page');
 const sound = document.querySelector('#sound');
@@ -10,6 +10,47 @@ audio.loop = true;
 audio.volume = 0.25;
 let currentTrack;
 let playbackAttempt = 0;
+let effect;
+
+function highlightedText(node, text, words = []) {
+  // Literal matching keeps story content safe and avoids embedding HTML in config.
+  while (text) {
+    const matches = words.map(word => ({ word, index: word ? text.indexOf(word) : -1 }))
+      .filter(match => match.index >= 0).sort((a, b) => a.index - b.index);
+    if (!matches.length) { node.append(text); break; }
+    const { word, index } = matches[0];
+    const span = element('span', word);
+    span.className = 'life';
+    node.append(text.slice(0, index), span);
+    text = text.slice(index + word.length);
+  }
+}
+
+function renderImage(image) {
+  const img = document.createElement('img');
+  img.src = image.src;
+  img.alt = image.alt;
+  img.className = 'story-image';
+  if (image.style) img.classList.add(image.style);
+  if (!image.sound) { main.append(img); return; }
+  effect = new Audio(image.sound);
+  effect.volume = 0.4;
+  effect.muted = audio.muted;
+  const button = element('button', '');
+  button.type = 'button';
+  button.className = 'image-button';
+  button.setAttribute('aria-label', image.label ?? image.alt);
+  button.append(img);
+  const status = element('p', '');
+  status.setAttribute('role', 'status');
+  const horn = effect;
+  button.addEventListener('click', async () => {
+    horn.currentTime = 0;
+    try { await horn.play(); status.textContent = ''; }
+    catch { status.textContent = 'Não foi possível tocar a buzina.'; }
+  });
+  main.append(button, status);
+}
 
 function element(tag, text) {
   const node = document.createElement(tag);
@@ -88,14 +129,17 @@ function setMusic(id) {
 play.addEventListener('click', startAudio);
 mute.addEventListener('click', () => {
   audio.muted = !audio.muted;
+  if (effect) effect.muted = audio.muted;
   mute.setAttribute('aria-pressed', String(audio.muted));
   mute.textContent = audio.muted ? 'Restaurar som' : 'Silenciar';
 });
 
 function render() {
+  if (effect) { effect.pause(); effect = null; }
   const id = new URL(location.href).searchParams.get('page') ?? story.start;
   const page = Object.hasOwn(story.pages, id) ? story.pages[id] : null;
   main.replaceChildren();
+  main.className = page?.style ?? '';
   if (!page) {
     document.title = 'Página não encontrada';
     main.append(element('h1', 'Não há nada aqui.'), pageLink('Voltar', story.start));
@@ -103,10 +147,12 @@ function render() {
     main.focus();
     return;
   }
-  document.title = page.question ?? page.text ?? '…';
-  const heading = element('h1', document.title);
+  document.title = page.title ?? page.question ?? page.text ?? '…';
+  const heading = element('h1', '');
+  highlightedText(heading, page.question ?? page.text ?? '', page.highlights);
   heading.id = 'question';
-  main.append(heading);
+  if (page.question || page.text) main.append(heading);
+  if (page.image) renderImage(page.image);
   if (page.question && page.text) main.append(element('p', page.text));
   if (page.question) {
     const form = document.createElement('form');
@@ -125,6 +171,11 @@ function render() {
     form.append(input, submit, status);
     form.addEventListener('submit', event => {
       event.preventDefault();
+      const branch = matchAnswer(page, input.value);
+      if (branch?.action === 'reset') {
+        location.replace(pageURL(branch.to ?? story.start));
+        return;
+      }
       const destination = resolveAnswer(page, input.value);
       if (destination) navigate(destination);
       else {

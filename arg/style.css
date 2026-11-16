@@ -19,3 +19,19 @@ footer button { padding: .5rem .75rem; }
 details { max-width: 42rem; margin: 1rem auto 0; line-height: 1.8; }
 #audio-status:empty { display: none; }
 [hidden] { display: none !important; }
+.life { color: #55ee78; }
+.near h1 { font-style: italic; }
+.deadpan h1 { font-size: 1.1rem; }
+.proclamation h1 { font-weight: bold; line-height: 2; }
+.ominous h1 { color: #d6b8b8; letter-spacing: .12em; }
+.key h1 { color: #e4ce83; letter-spacing: .25em; }
+.gentle h1 { font-family: Georgia, serif; }
+.oath h1 { font-size: clamp(1rem, 3vw, 1.2rem); text-align: left; line-height: 2; overflow-wrap: anywhere; }
+.stardust h1 { color: #b8bed8; letter-spacing: .08em; }
+.whisper h1 { font-size: 1rem; font-style: italic; color: #b1b1b1; }
+.salesman h1 { color: #f7e681; font-weight: bold; text-shadow: 2px 2px #7a265b; }
+.story-image { display: block; max-width: 100%; width: auto; max-height: 55vh; margin: 0 auto 3rem; object-fit: contain; }
+.distorted-earth { width: min(100%, 25rem); filter: invert(1) blur(22px) contrast(1.6); }
+.image-button { display: block; max-width: 100%; margin: auto; padding: 0; border: 0; background: transparent; }
+.image-button:hover { background: transparent; }
+.image-button .story-image { margin-bottom: 0; }
