@@ -38,4 +38,9 @@ python3 -m http.server
 
 Then open `http://localhost:8000/` in a browser.
 
+## ARG
+
+The small `?` in the homepage footer leads to the ARG. See [the ARG guide](arg/README.md)
+to add pages, change accepted answers and destinations, or replace the music.
+
 ---
