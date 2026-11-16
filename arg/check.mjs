@@ -45,6 +45,11 @@ try {
         const expected = await page.evaluate(async id => (await import('./config.js')).story.pages[id].text, branch.to);
         if (expected) assert.equal(await page.locator('h1').textContent(), expected);
         else assert.equal(await page.locator('main img').count(), 1);
+        if (branch.to !== 'lembranca') {
+          await page.getByRole('link', { name: 'Voltar', exact: true }).click();
+          await page.getByRole('heading', { name: 'E qual era o nome?' }).waitFor();
+          assert.equal(await page.locator('input').inputValue(), '');
+        }
       }
     }
   }
@@ -91,6 +96,8 @@ try {
   assert.equal(await page.locator('#answer-status').textContent(), 'Digite um nome.');
   await answer('nome inexistente');
   await page.getByRole('heading', { name: 'Não era esse o nome.' }).waitFor();
+  await page.getByRole('link', { name: 'Voltar', exact: true }).click();
+  await page.getByRole('heading', { name: 'E qual era o nome?' }).waitFor();
   assert.deepEqual(errors, []);
   console.log('PASS: all aliases, exact configured text, green highlights, Gaia reset, Terra silence/filter/back, car click/keyboard horn, history, refresh, mobile overflow, fallback.');
 } finally {
